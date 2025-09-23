@@ -1,26 +1,35 @@
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Middlewares
-app.use(cors());
-app.use(express.json());
-
-// Routes
+const authRoutes = require('./routes/auth');
 const booksRoutes = require('./routes/books');
-app.use('/api/books', booksRoutes);
+const auth = require('./middleware/auth');
 
-// Connexion à MongoDB
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+// Middlewares généraux
+app.use(express.json());
+app.use(cors());
+
+// Servir le dossier images
+app.use('/images', express.static('images')); // <-- ici
+
+// Routes publiques
+app.use('/api/auth', authRoutes);
+
+// Routes protégées
+app.use('/api/books', auth, booksRoutes);
+
+// Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('✅ Connecté à MongoDB'))
-.catch(err => console.error('❌ Erreur MongoDB :', err));
+.then(() => console.log('Connexion à MongoDB réussie !'))
+.catch(err => console.error('Connexion à MongoDB échouée :', err));
 
 // Lancement serveur
 app.listen(PORT, () => {
