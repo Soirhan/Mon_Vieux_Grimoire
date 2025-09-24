@@ -4,8 +4,15 @@ const bookSchema = mongoose.Schema({
   title: { type: String, required: true },
   author: { type: String, required: true },
   description: { type: String },
-  imageUrl: { type: String }, // URL vers l'image stockée
-  userId: { type: String, required: true } // pour lier le livre à l'utilisateur
+  imageUrl: { type: String },
+  userId: { type: String, required: true },
+  ratings: [
+    {
+      userId: { type: String, required: true },
+      grade: { type: Number, required: true }
+    }
+  ],
+  averageRating: { type: Number, default: 0 }
 });
 
 module.exports = mongoose.model('Book', bookSchema);

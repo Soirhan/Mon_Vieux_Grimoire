@@ -3,17 +3,25 @@ const fs = require('fs');
 
 // Créer un livre
 exports.createBook = (req, res, next) => {
-  const bookObject = JSON.parse(req.body.book);
-  delete bookObject._id;
+  let bookObject = {};
+
+  try {
+    bookObject = req.body.book ? JSON.parse(req.body.book) : req.body;
+  } catch (err) {
+    return res.status(400).json({ error: 'JSON invalide dans req.body.book' });
+  }
+
   const book = new Book({
     ...bookObject,
     userId: req.userId,
     imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : ''
   });
+
   book.save()
     .then(() => res.status(201).json({ message: 'Livre enregistré !' }))
     .catch(error => res.status(400).json({ error }));
 };
+
 
 // Récupérer tous les livres
 exports.getAllBooks = (req, res, next) => {
