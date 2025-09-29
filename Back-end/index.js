@@ -21,7 +21,7 @@ app.use('/images', express.static('images')); // <-- ici
 app.use('/api/auth', authRoutes);
 
 // Routes protégées
-app.use('/api/books', auth, booksRoutes);
+app.use('/api/books', booksRoutes);
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI, {
