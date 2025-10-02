@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors());
 
 // Servir le dossier images
-app.use('/images', express.static('images')); // <-- ici
+app.use('/images', express.static('images'));
 
 // Routes publiques
 app.use('/api/auth', authRoutes);

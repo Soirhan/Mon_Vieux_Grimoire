@@ -1,27 +1,29 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
-// Dossier de stockage
+// Vérifie que le dossier existe sinon le crée
+const uploadDir = path.resolve(__dirname, '../images/');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Types MIME autorisés
+const MIME_TYPES = {
+  'image/jpg': 'jpg',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+};
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'images');
+    callback(null, uploadDir); // Sauvegarde dans /backend/images
   },
   filename: (req, file, callback) => {
     const name = file.originalname.split(' ').join('_');
-    const ext = path.extname(file.originalname);
-    callback(null, name + Date.now() + ext);
+    const extension = MIME_TYPES[file.mimetype];
+    callback(null, name + Date.now() + '.' + extension);
   }
 });
 
-// Filtrage fichiers (images uniquement)
-const fileFilter = (req, file, callback) => {
-  const allowed = /jpg|jpeg|png/;
-  const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.test(ext)) {
-    callback(null, true);
-  } else {
-    callback(new Error('Format d\'image non supporté'));
-  }
-};
-
-module.exports = multer({ storage: storage, fileFilter: fileFilter }).single('image');
+module.exports = multer({ storage }).single('image');

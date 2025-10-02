@@ -4,6 +4,7 @@ const booksCtrl = require('../controllers/books');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
+// Toutes les routes sont protégées
 router.post('/', auth, multer, booksCtrl.createBook);
 router.get('/', auth, booksCtrl.getAllBooks);
 router.get('/:id', auth, booksCtrl.getOneBook);
