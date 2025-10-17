@@ -4,10 +4,14 @@ const booksCtrl = require('../controllers/books');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
-// Toutes les routes sont protégées
+// Route publique pour lister tous les livres
+router.get('/', booksCtrl.getAllBooks);
+
+// Route publique pour voir un livre par ID
+router.get('/:id', booksCtrl.getOneBook);
+
+// Routes protégées
 router.post('/', auth, multer, booksCtrl.createBook);
-router.get('/', auth, booksCtrl.getAllBooks);
-router.get('/:id', auth, booksCtrl.getOneBook);
 router.put('/:id', auth, multer, booksCtrl.modifyBook);
 router.delete('/:id', auth, booksCtrl.deleteBook);
 

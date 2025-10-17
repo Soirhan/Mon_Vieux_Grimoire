@@ -33,5 +33,5 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Lancement serveur
 app.listen(PORT, () => {
-  console.log(`🚀 Serveur backend lancé sur http://localhost:${PORT}`);
+  console.log(` Serveur backend lancé sur http://localhost:${PORT}`);
 });

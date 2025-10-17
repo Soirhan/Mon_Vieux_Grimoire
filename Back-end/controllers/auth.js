@@ -18,7 +18,7 @@ exports.signup = (req, res, next) => {
     })
     .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
     .catch(error => {
-      console.error('❌ Erreur signup:', error);
+      console.error(' Erreur signup:', error);
       res.status(400).json({ error });
     });
 };
