@@ -2,7 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Vérifie que le dossier existe sinon le crée
+// Vérifie que le dossier images existe sinon le crée
 const uploadDir = path.resolve(__dirname, '../images/');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
