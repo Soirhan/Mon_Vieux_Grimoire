@@ -1,5 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, {
+  useEffect,
+  useState,
+} from 'react';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 
 // Pages
 import SignIn from './pages/SignIn/SignIn';
@@ -23,6 +31,7 @@ import { useUser } from './lib/customHooks';
 function App() {
   const [user, setUser] = useState(null);
   const { connectedUser } = useUser();
+  const location = useLocation(); // pour savoir sur quelle page on est
 
   // Met à jour l'état user si l'utilisateur connecté change
   useEffect(() => {
@@ -30,37 +39,48 @@ function App() {
   }, [connectedUser]);
 
   return (
+    <div>
+      {/* Pour remonter automatiquement en haut de page à chaque navigation */}
+      <ScrollToTop />
+
+      {/* Header avec gestion de l'utilisateur connecté */}
+      <Header user={user} setUser={setUser} />
+
+      <Routes>
+        {/* Page d'accueil */}
+        <Route index element={<Home />} />
+
+        {/* Page connexion */}
+        <Route path={APP_ROUTES.SIGN_IN} element={<SignIn setUser={setUser} />} />
+
+        {/* Page inscription */}
+        <Route path={APP_ROUTES.SIGN_UP} element={<Signup />} />
+
+        {/* Page détail livre */}
+        <Route path={APP_ROUTES.BOOK} element={<Book />} />
+
+        {/* Page mise à jour livre */}
+        <Route path={APP_ROUTES.UPDATE_BOOK} element={<UpdateBook />} />
+
+        {/* Page ajout livre */}
+        <Route path={APP_ROUTES.ADD_BOOK} element={<AddBook />} />
+      </Routes>
+
+      {/* Le footer n’apparaît pas sur la page de connexion */}
+      {location.pathname !== APP_ROUTES.SIGN_IN && (
+        /* Footer global */
+        <Footer />
+      )}
+    </div>
+  );
+}
+
+function AppWrapper() {
+  return (
     <BrowserRouter>
-      <div>
-        <ScrollToTop /> {/* Pour remonter automatiquement en haut de page à chaque navigation */}
-        <Header user={user} setUser={setUser} /> {/* Header avec gestion de l'utilisateur connecté */}
-        <Routes>
-          {/* Page d'accueil */}
-          <Route index element={<Home />} />
-
-          {/* Page connexion */}
-          <Route path={APP_ROUTES.SIGN_IN} element={<SignIn setUser={setUser} />} />
-
-          {/* Page inscription */}
-          <Route
-            path={APP_ROUTES.SIGN_UP}
-            element={<Signup />}
-          />
-          {/* route ajoutée pour l'inscription */}
-
-          {/* Page détail livre */}
-          <Route path={APP_ROUTES.BOOK} element={<Book />} />
-
-          {/* Page mise à jour livre */}
-          <Route path={APP_ROUTES.UPDATE_BOOK} element={<UpdateBook />} />
-
-          {/* Page ajout livre */}
-          <Route path={APP_ROUTES.ADD_BOOK} element={<AddBook />} />
-        </Routes>
-        <Footer /> {/* Footer global */}
-      </div>
+      <App />
     </BrowserRouter>
   );
 }
 
-export default App;
+export default AppWrapper;
